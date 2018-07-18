@@ -27,7 +27,7 @@ bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands = ['start', 'help'])
 def send_welcome(message):
-	welcome_message = "Salam! \nmatn be finglish vared konid."
+	welcome_message = "Salam! matn be finglish vared konid."
 	bot.reply_to(message, welcome_message)
 	bot.send_message(chat_id = message.from_user.id, text = f2p(welcome_message))
 
