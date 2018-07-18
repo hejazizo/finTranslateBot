@@ -47,9 +47,11 @@ def translate(message):
 	if isEnglish(msg_text) and not msg_text.startswith(':'):
 
 		# user info appended to translated message
-		name = '<b>{}</b>'.format(message.from_user.first_name)
+		name = message.from_user.first_name
 		if message.from_user.last_name:
 			name += ' ' + message.from_user.last_name
+		name = '<b>{}</b>'.format(name)
+
 		if message.from_user.username:
 			name += ' (@{})'.format(message.from_user.username)
 
