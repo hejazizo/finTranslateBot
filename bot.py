@@ -32,19 +32,19 @@ def send_welcome(message):
 
 @bot.message_handler(func = lambda message: True)
 def echo_all(message):
-	language = detect(message.text)
+	# language = detect(message.text)
 	if isEnglish(message.text):
-		if(language in ['fa', 'ar', 'af', 'en']):
-			pass
-		else:
+		# if(language in ['fa', 'ar', 'af', 'en']):
+		# 	pass
+		# else:
 			
-			name = message.from_user.first_name
-			if message.from_user.last_name:
-				name += ' ' + message.from_user.last_name
-			username = message.from_user.username
+		name = message.from_user.first_name
+		if message.from_user.last_name:
+			name += ' ' + message.from_user.last_name
+		username = message.from_user.username
 
-			output_message = '<b>{name}</b> (@{username}):\n\n{message}'.format(name = name, username = username, message=f2p(message.text))
-			bot.send_message(message.from_user.id, output_message, parse_mode='HTML')
+		output_message = '<b>{name}</b> (@{username}):\n\n{message}'.format(name = name, username = username, message=f2p(message.text))
+		bot.send_message(message.from_user.id, output_message, parse_mode='HTML')
 
 print('BOT IS RUNNING NOW...')
 bot.polling()
