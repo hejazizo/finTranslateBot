@@ -43,7 +43,7 @@ def echo_all(message):
 		username = message.from_user.username
 
 		output_message = '<b>{name}</b> (@{username}):\n\n{message}'.format(name = name, username = username, message=f2p(message.text))
-		bot.send_message(message.from_user.id, output_message, parse_mode='HTML')
+		bot.send_message(message.chat.id, output_message, parse_mode='HTML')
 
 print('BOT IS RUNNING NOW...')
 bot.skip_pending = True
