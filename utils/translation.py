@@ -40,11 +40,12 @@ def translate(message):
 	"""
 
 	# removing emojies
-	msg_text = emoji.demojize(message.text)
-
+	msg_text = message.text
+	raw_text = emoji.demojize(msg_text)
 	output_message = None
+
 	# 1
-	if isEnglish(msg_text) and not msg_text.startswith(':'):
+	if isEnglish(raw_text) and not emoji.demojize(raw_text).startswith(':'):
 
 		# user info appended to translated message
 		name = message.from_user.first_name

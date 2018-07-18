@@ -1,12 +1,9 @@
-#!/usr/bin/env python3
-
 import os
 import re
 import itertools
 from functools import reduce
 
 from .version import __version__
-
 
 def get_portable_filename(filename):
 	path, _ = os.path.split(__file__)
