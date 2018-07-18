@@ -55,10 +55,14 @@ def translate(message):
 		if message.from_user.username:
 			name += ' (@{})'.format(message.from_user.username)
 
-		# result
+		# Result
+		# processing multiple line message
+		translated_msg = []
 		splitted_msg = msg_text.split('\n')
-		print(splitted_msg)
-
-		output_message = '{name}:\n\n{message}'.format(name = name, message=f2p(msg_text))
+		for msg in splitted_msg:
+			translated_msg.append(f2p(msg))
+		
+		output_message = '\n'.join(translated_msg)
+		output_message = '{name}:\n\n{message}'.format(name = name, message=output_message)
 	
 	return output_message
