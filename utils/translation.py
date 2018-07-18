@@ -47,13 +47,16 @@ def translate(message):
 	if isEnglish(msg_text) and not msg_text.startswith(':'):
 
 		# user info appended to translated message
-		name = message.from_user.first_name
+		name = '<b>{}</b>'.format(message.from_user.first_name)
 		if message.from_user.last_name:
 			name += ' ' + message.from_user.last_name
 		if message.from_user.username:
 			name += ' (@{})'.format(message.from_user.username)
 
 		# result
-		output_message = '<b>{name}</b>:\n\n{message}'.format(name = name, message=f2p(msg_text))
+		splitted_msg = msg_text.split('\n')
+		print(splitted_msg)
+
+		output_message = '{name}:\n\n{message}'.format(name = name, message=f2p(msg_text))
 	
 	return output_message
