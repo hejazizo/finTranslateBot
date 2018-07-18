@@ -31,7 +31,7 @@ def translate(message):
 		------------------------------
 			name (@username):
 
-				<translated message>
+				<translated_message>
 		------------------------------
 
 		NOTE:
@@ -54,6 +54,6 @@ def translate(message):
 			name += ' (@{})'.format(message.from_user.username)
 
 		# result
-		output_message = '<b>{name}</b>:\n\n{message}'.format(name = name, message=f2p(message.text))
+		output_message = '<b>{name}</b>:\n\n{message}'.format(name = name, message=f2p(msg_text))
 	
 	return output_message
