@@ -38,11 +38,13 @@ def echo_all(message):
 	print('Language: ', language, 'Message:', msg_text)
 	if isEnglish(msg_text) and not msg_text.startswith(':'):
 		name = message.from_user.first_name
+
 		if message.from_user.last_name:
 			name += ' ' + message.from_user.last_name
-		username = message.from_user.username
+		if message.from_user.username:
+			name += ' (@{})'.format(message.from_user.username)
 
-		output_message = '<b>{name}</b> (@{username}):\n\n{message}'.format(name = name, username = username, message=f2p(message.text))
+		output_message = '<b>{name}</b>:\n\n{message}'.format(name = name, message=f2p(message.text))
 		bot.send_message(message.chat.id, output_message, parse_mode='HTML')
 
 print('BOT IS RUNNING NOW...')
