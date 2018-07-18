@@ -46,4 +46,5 @@ def echo_all(message):
 		bot.send_message(message.from_user.id, output_message, parse_mode='HTML')
 
 print('BOT IS RUNNING NOW...')
-bot.polling()
+bot.skip_pending = True
+bot.polling(none_stop=True)
