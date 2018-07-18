@@ -1,11 +1,11 @@
-#- * -coding: utf - 8 - * -
 import telebot
 import os
 import sys
-from finglish import f2p
-import langid
 import emoji
 
+from finglish import f2p
+
+## Function to detect non english characters
 def isEnglish(s):
 	try:
 		s.encode(encoding = 'utf-8').decode('ascii')
@@ -14,39 +14,73 @@ def isEnglish(s):
 	else:
 		return True
 
-languages_list = ['af', 'ar', 'bg', 'bn', 'ca', 'cs', 'cy', 'da', 'de', 'el', 
-					'en', 'es', 'et', 'fa', 'fi', 'fr', 'gu', 'he', 'hi', 'hr', 
-					'hu', 'id', 'it', 'ja', 'kn', 'ko', 'lt', 'lv', 'mk', 'ml', 
-					'mr', 'ne', 'nl', 'no', 'pa', 'pl', 'pt', 'ro', 'ru', 'sk', 
-					'sl', 'so', 'sq', 'sv', 'sw', 'ta', 'te', 'th', 'tl', 'tr', 
-					'uk', 'ur', 'vi', 'zh-cn', 'zh-tw']
 
-# init
-TOKEN = os.environ["BEHNEVIS_BOT_TOKEN"]
-bot = telebot.TeleBot(TOKEN)
+## Main translation function
+def translate(message):
+	"""
+	Function to translate finglish to persian.
 
-@bot.message_handler(commands = ['start', 'help'])
-def send_welcome(message):
-	welcome_message = "Salam! matn be finglish vared konid."
-	bot.reply_to(message, welcome_message)
-	bot.send_message(chat_id = message.from_user.id, text = f2p(welcome_message))
+	NOTE: #1 These messages are not processed by BOT:
+			1. Messages that are not english characters.
+			2. Messages that start with emojies.
 
-@bot.message_handler(func = lambda message: True)
-def echo_all(message):
+	TODO: remove emojis from the beginning of a message and then process the rest of it.
+
+	Args:
+		message object
+
+	Returns:
+		translated message (str)
+		------------------------------
+			name (@username):
+
+				<translated message>
+		------------------------------
+
+		NOTE:
+			- name is formatted BOLD
+			- if user has no username, output will only include name and <translated message>
+	"""
+
+	# removing emojies
 	msg_text = emoji.demojize(message.text)
-	language = langid.classify(msg_text)
-	print('Language: ', language, 'Message:', msg_text)
-	if isEnglish(msg_text) and not msg_text.startswith(':'):
-		name = message.from_user.first_name
 
+	# 1
+	if isEnglish(msg_text) and not msg_text.startswith(':'):
+
+		# user info appended to translated message
+		name = message.from_user.first_name
 		if message.from_user.last_name:
 			name += ' ' + message.from_user.last_name
 		if message.from_user.username:
 			name += ' (@{})'.format(message.from_user.username)
 
+		# result
 		output_message = '<b>{name}</b>:\n\n{message}'.format(name = name, message=f2p(message.text))
-		bot.send_message(message.chat.id, output_message, parse_mode='HTML')
+	
+	return output_message
 
+# Creating BOT
+TOKEN = os.environ["BEHNEVIS_BOT_TOKEN"]
+bot = telebot.TeleBot(TOKEN)
+
+# ------------ /start and /help commands ------------ #
+@bot.message_handler(commands = ['start', 'help'])
+def send_welcome(message):
+	"""
+	/start and /help commands messages.
+	"""
+	welcome_message = "Salam! matn be finglish vared konid."
+	welcome_message += '\n{}'.format(f2p(welcome_message))
+	bot.send_message(chat_id = message.chat.id, text = welcome_message)
+
+# --------------- Translation function -------------- #
+@bot.message_handler(func = lambda message: True)
+def fin2persian(message):
+	translated_msg = translate(message)
+	bot.send_message(message.chat.id, translated_msg, parse_mode='HTML')
+
+# ------------------- Starting BOT ------------------ #
 print('BOT IS RUNNING NOW...')
 bot.skip_pending = True
 bot.polling(none_stop=True)
