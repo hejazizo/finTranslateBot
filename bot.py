@@ -45,6 +45,7 @@ def translate(message):
 	# removing emojies
 	msg_text = emoji.demojize(message.text)
 
+	output_message = None
 	# 1
 	if isEnglish(msg_text) and not msg_text.startswith(':'):
 
@@ -78,7 +79,8 @@ def send_welcome(message):
 @bot.message_handler(func = lambda message: True)
 def fin2persian(message):
 	translated_msg = translate(message)
-	bot.send_message(message.chat.id, translated_msg, parse_mode='HTML')
+	if translated_msg:
+		bot.send_message(message.chat.id, translated_msg, parse_mode='HTML')
 
 # ------------------- Starting BOT ------------------ #
 print('BOT IS RUNNING NOW...')
