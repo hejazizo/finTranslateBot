@@ -204,7 +204,13 @@ def f2p(phrase, max_word_size=15, cutoff=3):
 	"""
 
 	results = f2p_list(phrase, max_word_size, cutoff)
-	return ''.join(i[0][0] for i in results)
+	results = ''.join(i[0][0] for i in results)
+
+	# replacing english punctuations with persian ones
+	results = results.replace('?', '؟')
+	results = results.replace(',', '،')
+
+	return results
 
 def main():
 	print('Finglish to Persian Converter, v{}'.format(__version__))
