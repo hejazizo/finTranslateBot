@@ -1,3 +1,4 @@
 pyTelegramBotAPI
 finglish
-langdetect
+langid
+emoji

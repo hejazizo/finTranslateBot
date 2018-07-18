@@ -3,7 +3,6 @@ import telebot
 import os
 import sys
 from finglish import f2p
-from langdetect import detect
 import langid
 import emoji
 
