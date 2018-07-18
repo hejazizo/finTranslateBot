@@ -4,6 +4,8 @@ import os
 import sys
 from finglish import f2p
 from langdetect import detect
+import langid
+import emoji
 
 def isEnglish(s):
 	try:
@@ -32,12 +34,10 @@ def send_welcome(message):
 
 @bot.message_handler(func = lambda message: True)
 def echo_all(message):
-	# language = detect(message.text)
-	if isEnglish(message.text):
-		# if(language in ['fa', 'ar', 'af', 'en']):
-		# 	pass
-		# else:
-			
+	msg_text = emoji.demojize(message.text)
+	language = langid.classify(msg_text)
+	print('Language: ', language, 'Message:', msg_text)
+	if isEnglish(msg_text) and not msg_text.startswith(':'):
 		name = message.from_user.first_name
 		if message.from_user.last_name:
 			name += ' ' + message.from_user.last_name
