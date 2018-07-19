@@ -9,7 +9,7 @@ from DB import DB
 DBhandler = DB()
 
 # Creating BOT
-TOKEN = os.environ["FINBOT_TOKEN"]
+TOKEN = os.environ["BEHNEVIS_BOT_TOKEN"]
 bot = telebot.TeleBot(TOKEN)
 
 # ------------ /start and /help commands ------------ #
