@@ -52,8 +52,6 @@ try:
 
 		# TABLE: USER
 		DBhandler.update_user(message)
-
-		print(message)
 		
 		# TABLE: EditMsg
 		CHAT_ID = message.chat.id
