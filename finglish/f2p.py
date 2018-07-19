@@ -184,7 +184,6 @@ def f2p_list(phrase, max_word_size=15, cutoff=3):
 	sep_regex = re.compile(r'([ \-_~!@#%$^&*\(\)\[\]\{\}/\:;"|,./?`]+)')
 	# split the phrase into words
 	results = [w for w in sep_regex.split(phrase) if w]
-	print(results)
 
 	# return an empty list if no words
 	if results == []:
