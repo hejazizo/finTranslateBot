@@ -31,7 +31,13 @@ def edited_message(message):
 	NOTE: if user edits the message to non-finglish, 
 			message will be edited to: 'Message Edited to NON-Finglish.'
 	"""
-	bot_MsgId = DBhandler.get_botMsgId(table='EditMsg_{}'.format(message.chat.id), message=message)
+	CHAT_ID = message.chat.id
+	table='EditMsg_{}'.format(CHAT_ID)
+	if message.chat.id < 0:
+		CHAT_ID = -1 * CHAT_ID
+		table='EditMsg_Group_{}'.format(CHAT_ID)
+
+	bot_MsgId = DBhandler.get_botMsgId(table=table, message=message)
 	if bot_MsgId:
 		translated_msg = translate(message)
 		if translated_msg:
@@ -41,11 +47,17 @@ def edited_message(message):
 
 @bot.message_handler(func = lambda message: True)
 def fin2persian(message):
-
+	
+	CHAT_ID = message.chat.id
+	table='EditMsg_{}'.format(CHAT_ID)
+	if message.chat.id < 0:
+		CHAT_ID = -1 * CHAT_ID
+		table='EditMsg_Group_{}'.format(CHAT_ID)
+		
 	translated_msg = translate(message)
 	if translated_msg:
 		bot_message = bot.send_message(message.chat.id, translated_msg, parse_mode='HTML')
-		DBhandler.add_msgId(table='EditMsg_{}'.format(message.chat.id), message=message, bot_message=bot_message)
+		DBhandler.add_msgId(table=table, message=message, bot_message=bot_message)
 
 # ------------------- Starting BOT ------------------ #
 bot.skip_pending = True
