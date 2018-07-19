@@ -4,7 +4,6 @@ class DB(object):
 
 	def __init__(self):
 		self._db = DBConnection()
-
 		self._columns_info = {'tel_id': 'INTEGER',
 							'user_msg_id': 'INTEGER',
 							'bot_msg_id': 'INTEGER'}

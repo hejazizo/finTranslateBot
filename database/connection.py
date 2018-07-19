@@ -9,13 +9,9 @@ class DBConnection(object):
 		- self._cur		: 	currsor of connection
 		- self._config	: 	Database config dictionary (dict{})
 	"""
-	def __init__(self, dbname=config.DATABASE_CONFIG['dbname']):
+	def __init__(self):
 		
 		self._config = config.DATABASE_CONFIG
-
-		# Connection to Database
-		if dbname != self._config['dbname']:
-			raise ValueError("Couldn't not find DB with given name")
 		self._conn = psycopg2.connect(self._config['url'])
 		self._cur = self._conn.cursor()
 
