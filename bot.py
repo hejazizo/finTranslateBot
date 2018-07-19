@@ -33,9 +33,9 @@ def edited_message(message):
 	"""
 	CHAT_ID = message.chat.id
 	table='EditMsg_{}'.format(CHAT_ID)
-	if message.chat.id < 0:
+	if CHAT_ID < 0:
 		CHAT_ID = -1 * CHAT_ID
-		table='EditMsg_Group_{}'.format(CHAT_ID)
+		table='EditMsg_{}_{}'.format(message.chat.type, CHAT_ID)
 
 	bot_MsgId = DBhandler.get_botMsgId(table=table, message=message)
 	if bot_MsgId:
@@ -47,12 +47,18 @@ def edited_message(message):
 
 @bot.message_handler(func = lambda message: True)
 def fin2persian(message):
+
+	# TABLE: USER
+	DBhandler.update_user(message)
+
+	print(message)
 	
+	# TABLE: EditMsg
 	CHAT_ID = message.chat.id
 	table='EditMsg_{}'.format(CHAT_ID)
-	if message.chat.id < 0:
+	if CHAT_ID < 0:
 		CHAT_ID = -1 * CHAT_ID
-		table='EditMsg_Group_{}'.format(CHAT_ID)
+		table='EditMsg_{}_{}'.format(message.chat.type, CHAT_ID)
 		
 	translated_msg = translate(message)
 	if translated_msg:

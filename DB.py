@@ -4,13 +4,21 @@ class DB(object):
 
 	def __init__(self):
 		self._db = DBConnection()
+		
+
 		self._columns_info = {'tel_id': 'INTEGER',
+								'first_name': 'TEXT',
+								'last_name': 'TEXT',
+								'user_name': 'TEXT',
+
+							}
+		# self._db.create_table(table_name='Users', columns_info=None)
+
+	def add_msgId(self, table, message, bot_message):
+		columns_info = {'tel_id': 'INTEGER',
 							'user_msg_id': 'INTEGER',
 							'bot_msg_id': 'INTEGER'}
-
-	
-	def add_msgId(self, table, message, bot_message):
-		self._db.create_table(table_name=table, columns_info=self._columns_info)
+		self._db.create_table(table_name=table, columns_info=columns_info)
 		
 		msg_info = {'tel_id' : message.from_user.id, 
 					'user_msg_id' : message.message_id, 
@@ -27,3 +35,6 @@ class DB(object):
 			return botMsgId[0]
 		
 		return None
+	
+	def update_user(self, message):
+		pass
