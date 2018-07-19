@@ -7,7 +7,7 @@ from utils.translation import translate
 from database.connection import DBConnection
 
 # Creating BOT
-TOKEN = os.environ["FINBOT_TOKEN"]
+TOKEN = os.environ["BEHNEVIS_BOT_TOKEN"]
 bot = telebot.TeleBot(TOKEN)
 DB = DBConnection()
 
