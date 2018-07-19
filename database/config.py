@@ -7,5 +7,5 @@ DATABASE_CONFIG = {
     'user'		: os.environ['FINBOT_USERNAME'],
     'password'	: os.environ['FINBOT_PASS'],
     'port'		: os.environ['FINBOT_PORT'],
-	'table' 	: os.environ['FINBOT_TABLE']
+	'url'		: os.environ['FINBOT_URL']
 }

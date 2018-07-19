@@ -41,3 +41,9 @@ And then try again with:
 ```
 sudo pip3 install psycopg2
 ```
+
+### Install PostgreSQL client
+```
+sudo apt-get update
+sudo apt-get install postgresql postgresql-contrib
+```

@@ -9,65 +9,104 @@ class DBConnection(object):
 		- self._cur		: 	currsor of connection
 		- self._config	: 	Database config dictionary (dict{})
 	"""
-	def __init__(self, dbname=config.DATABASE_CONFIG['dbname'], table=config.DATABASE_CONFIG['table']):
+	def __init__(self, dbname=config.DATABASE_CONFIG['dbname']):
 		
 		self._config = config.DATABASE_CONFIG
-		self._table = table
 
 		# Connection to Database
 		if dbname != self._config['dbname']:
 			raise ValueError("Couldn't not find DB with given name")
-		self._conn = psycopg2.connect(host=self._config['host'],
-							user=self._config['user'],
-							password=self._config['password'],
-							dbname=self._config['dbname'],
-							port=self._config['port'])
+		self._conn = psycopg2.connect(self._config['url'])
 		self._cur = self._conn.cursor()
 
-		# Create Database Tables
-		self.create_tables()
-	
-	def create_tables(self):
-		self._cur.execute('''
-		CREATE TABLE IF NOT EXISTS {table}(
-			tel_id INTEGER,
-			user_msg_id INTEGER,
-			bot_msg_id INTEGER
-		)
-		'''.format(table=self._table))
-		self._conn.commit()
-
-	def add_msg(self, tel_id, user_msg_id, bot_msg_id):
-		"""
-		Adds the information of one translated message
-
-		       User      |  User Message   | Translated Message
-		-------------------------------------------------------
-		user telegram id | user message id |   bot message id
+	# --------------- Query Wrapper --------------- #
+	def create_table(self, table_name, columns_info):
+		columns_clause = []
+		for column, info in columns_info.items():
+			columns_clause.append(' '.join([column, info]))
 		
-		"""
+		columns_clause = ', '.join(columns_clause)
 		self._cur.execute('''
-		INSERT INTO {table} (tel_id, user_msg_id, bot_msg_id) VALUES (%s, %s, %s)
-		'''.format(table=self._table), (tel_id, user_msg_id, bot_msg_id))
+		CREATE TABLE IF NOT EXISTS {table} ({columns})
+		'''.format(table=table_name, columns=columns_clause))
 		self._conn.commit()
 
-	def select_bot_msg_id(self, tel_id, user_msg_id):
-		"""
-		Retrieves the translated message id from DB by having:
-			- User Telegram ID
-			- User Message ID
-		"""
+	def drop_table(self, table_name):
 		self._cur.execute('''
-		SELECT bot_msg_id FROM {table} WHERE tel_id = (%s) AND user_msg_id = (%s)
-		'''.format(table=self._table), (tel_id, user_msg_id))
-		bot_msg_id = self._cur.fetchone()
-
-		return bot_msg_id
-
-	def del_msg(self, tel_id, user_msg_id, bot_msg_id):
-		self._cur.execute('''
-		DELETE FROM {table} WHERE tel_id = (%s) AND 
-									user_msg_id = (%s) AND 
-									bot_msg_id = (%s)'''.format(table=self._table), 
-									(tel_id, user_msg_id, bot_msg_id))
+		DROP TABLE {table}'''.format(table=table_name))
 		self._conn.commit()
+
+	def insert(self, table, columns_val):
+		columns = '({})'.format(', '.join([str(val) for val in columns_val.keys()]))
+		values = '({})'.format(', '.join(['%s' for val in columns_val.keys()]))
+		self._cur.execute('''
+		INSERT INTO {table_name} {columns} VALUES {values}
+		'''.format(table_name=table, 
+			columns=columns,
+			values=values), tuple(columns_val.values()))
+
+		self._conn.commit()
+
+	def delete(self, table, conditions=None):
+		where_clause = self.create_where(conditions)
+		self._cur.execute('''
+			DELETE FROM {table} {where_clause}'''
+			.format(table=table, where_clause=where_clause))
+		self._conn.commit()
+
+	def select(self, table, columns_target=None, conditions=None):
+		"""
+		Queries DB:
+			Select columns_target FROM table WHERE conditions
+
+		Args:
+			- table (str):
+				- EditMsg
+				- Users
+				- ...
+			- columns_target (list[])
+			- conditions (dict{})
+
+		Returns:
+			- results (list[set()])
+				- [(col_1, col_2, col_3), (..., ..., ...), ...]
+		"""
+
+		# COLUMNs
+		select_clause = self.create_select(columns_target=columns_target)
+		# WHERE clause
+		where_clause = self.create_where(conditions)
+		# QUERY
+
+		self._cur.execute('''
+			SELECT {select_clause} FROM {table} {where_clause}
+			'''.format(select_clause=select_clause,
+				table = table,
+				where_clause=where_clause))
+
+		return self._cur.fetchall()
+
+
+	def create_select(self, columns_target):
+		select_clause = '*'
+		# COLUMNs
+		if columns_target:
+			select_clause = ', '.join(columns_target)
+		
+		return select_clause
+		
+	def create_where(self, conditions):
+		# WHERE clause
+		where_clause = ''
+		if conditions:
+			conditions_list = []
+			for column, value in conditions.items():
+				
+				if isinstance(value, str):
+					value = "'{}'".format(value)
+				conditions_list.append('{}={}'.format(column, value))
+			
+			where_clause = 'WHERE '
+			where_clause += ' AND '.join(conditions_list)
+
+		return where_clause
