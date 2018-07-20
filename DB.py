@@ -99,7 +99,6 @@ class DB(object):
 		"""
 		current_date = message.date
 		two_day = 2 * 24 * 60 * 60
-		two_day = 5
 		self._db._cur.execute('''
 			DELETE FROM EditMsg WHERE (%s) - date > (%s)
 		''', (current_date, two_day))
