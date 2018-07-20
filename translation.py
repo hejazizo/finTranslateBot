@@ -47,14 +47,6 @@ def translate(message):
 	# 1
 	if isEnglish(raw_text) and not emoji.demojize(raw_text).startswith(':'):
 
-		# user info appended to translated message
-		name = message.from_user.first_name
-		if message.from_user.last_name:
-			name += ' ' + message.from_user.last_name
-		name = '<b>{}</b>'.format(name)
-
-		if message.from_user.username:
-			name += ' (@{})'.format(message.from_user.username)
 
 		# Result
 		# processing multiple line message
@@ -64,6 +56,5 @@ def translate(message):
 			translated_msg.append(f2p(msg))
 		
 		output_message = '\n'.join(translated_msg)
-		output_message = '{name}:\n\n{message}'.format(name = name, message=output_message)
 	
 	return output_message
