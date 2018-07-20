@@ -77,13 +77,16 @@ class DBConnection(object):
 		where_clause = self.create_where(conditions)
 
 		# QUERY
-		self._cur.execute('''
+		result = self._cur.execute('''
 			SELECT {select_clause} FROM {table} {where_clause}
 			'''.format(select_clause=select_clause,
 				table = table,
 				where_clause=where_clause))
 
-		return self._cur.fetchall()
+		if result:
+			return self._cur.fetchall()
+		
+		return None
 	
 	def select_one(self, table, columns_target=None, conditions=None):
 		result = self.select(table=table, columns_target=columns_target, conditions=conditions)
