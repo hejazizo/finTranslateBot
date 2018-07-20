@@ -36,9 +36,12 @@ def edited_message(message):
 	"""
 
 	try:
+		print('HERE')
 		# TABLE: EditMsg
 		bot_MsgId = DBhandler.get_botMsgId(table='EditMsg', message=message)
+		print(bot_MsgId)
 		if bot_MsgId:
+			print('HERE _ 2')
 			translated_msg = translate(message)
 			if translated_msg:
 				translated_msg = postprocess_msg(message, translated_msg)
@@ -66,7 +69,7 @@ def fin2persian(message):
 			# 	DBhandler.update_group(message)
 			# DBhandler.update_user(message)
 			# # REMOVING expired messages for edit
-			
+
 			global UPDATE_COUNTER
 			UPDATE_COUNTER += 1
 			if UPDATE_COUNTER % 200 == 0:
