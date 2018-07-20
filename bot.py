@@ -56,22 +56,22 @@ def fin2persian(message):
 		translated_msg = translate(message)
 		if translated_msg:
 			
-			# Update User and Group Info
-			if message.chat.type == 'group':
-				DBhandler.update_group(message)
-			DBhandler.update_user(message)
 
 			translated_msg = postprocess_msg(message, translated_msg)
 			bot_message = bot.send_message(message.chat.id, translated_msg, parse_mode='HTML')
 			DBhandler.add_msgId(table='EditMsg', message=message, bot_message=bot_message)
 
 
-			# REMOVING expired messages for edit
-			global UPDATE_COUNTER
-			UPDATE_COUNTER += 1
-			if UPDATE_COUNTER % 200 == 0:
-				DBhandler.update_msg_ids(message)
-				UPDATE_COUNTER = 0
+			# # Update User and Group Info
+			# if message.chat.type == 'group':
+			# 	DBhandler.update_group(message)
+			# DBhandler.update_user(message)
+			# # REMOVING expired messages for edit
+			# global UPDATE_COUNTER
+			# UPDATE_COUNTER += 1
+			# if UPDATE_COUNTER % 200 == 0:
+			# 	DBhandler.update_msg_ids(message)
+			# 	UPDATE_COUNTER = 0
 
 	except Exception as e:
 		print(e)
